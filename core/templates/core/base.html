@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caveman Detector</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+    <nav id="main-nav">
+        <div class="nav-inner glass-panel">
+            <div class="nav-logo" onclick="location.reload()">CAVEMAN <span class="logo-accent"> DETECTOR</span></div>
+            <button id="nav-cta" onclick="startApp()">Start Searching</button>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <div id="app-loader" class="loader-overlay hidden">
+        <div class="loader-spinner"></div>
+    </div>
+    <script src="{% static 'core/js/app.js' %}"></script>
+</body>
+</html>

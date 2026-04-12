@@ -1,0 +1,114 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section id="hero-section">
+    <div class="hero-bg-video">
+        <video autoplay loop muted playsinline>
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="hero-content">
+        <div class="hero-text-block">
+            <h1 id="hero-title"></h1>
+            <p id="hero-subtitle" class="fade-node">Find local businesses without websites. Reach them before anyone else.</p>
+            <p id="hero-subtitle-2">AI made web development accessible to everyone. Millions of businesses still have no website. This is your opportunity.</p>
+            <div id="hero-actions" class="fade-node">
+                <button class="btn-primary" onclick="startApp()">Start Searching</button>
+            </div>
+        </div>
+        <div id="hero-badge" class="fade-node">
+            <div class="glass-panel hero-tag">
+                <span>Search. Discover. Sell.</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- App Flow -->
+<main id="app-root" class="hidden">
+    <div class="app-container">
+
+        <!-- Step 1: Categories -->
+        <div id="step-1" class="step active">
+            <div class="step-label">01 — Category</div>
+            <h2 class="step-title">What are you looking for?</h2>
+            <div id="categories" class="cat-grid"></div>
+
+            <button class="btn-back" onclick="goHome()">← Home</button>
+        </div>
+
+        <!-- Step 2: Location Method -->
+        <div id="step-2" class="step">
+            <div class="step-label">02 — Location</div>
+            <h2 class="step-title">How do you want to search?</h2>
+            <div class="method-grid">
+                <button id="btn-my-location" class="method-card glass-panel" onclick="useMyLocation()">
+                    <div class="method-icon">📍</div>
+                    <div class="method-label">Near Me</div>
+                    <div class="method-desc">Search businesses around your current location</div>
+                </button>
+                <button id="btn-browse-area" class="method-card glass-panel" onclick="browseAreas()">
+                    <div class="method-icon">🌍</div>
+                    <div class="method-label">Browse Region</div>
+                    <div class="method-desc">Pick a country, city and neighborhood</div>
+                </button>
+            </div>
+            <div id="location-info" class="loc-info"></div>
+            <button class="btn-back" onclick="goStep(1)">← Back</button>
+        </div>
+
+        <!-- Step 2b: Region Browser -->
+        <div id="step-2b" class="step">
+            <div class="step-label">02 — Region</div>
+            <h2 class="step-title">Select a country</h2>
+            <div id="country-list" class="country-grid"></div>
+
+            <div id="area-types-wrap" class="hidden">
+                <h3 class="sub-title">Area type</h3>
+                <div id="area-types" class="area-type-grid"></div>
+            </div>
+
+            <div id="area-list-wrap" class="hidden">
+                <h3 class="sub-title">Select area</h3>
+                <div id="area-list" class="area-grid"></div>
+            </div>
+
+            <button class="btn-back" onclick="goStep(2)">← Back</button>
+        </div>
+
+        <!-- Step 3: Results -->
+        <div id="step-3" class="step">
+            <div class="step-header">
+                <div>
+                    <div class="step-label">03 — Results</div>
+                    <h2 class="step-title">Businesses without websites</h2>
+                </div>
+                <div id="results-count" class="result-badge">0</div>
+            </div>
+            <div id="results-list" class="results-grid"></div>
+            <button class="btn-back" onclick="goStep(2)">← Back</button>
+        </div>
+
+        <!-- Step 4: Chat -->
+        <div id="step-4" class="step">
+            <div id="selected-business" class="glass-panel biz-header"></div>
+            <div class="chat-container glass-panel">
+                <div id="chat-messages" class="chat-scroll"></div>
+                <div class="chat-bar">
+                    <input type="text" id="chat-input" placeholder="Type your message..." maxlength="1000">
+                    <button id="send-btn" class="btn-send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <button class="btn-back" onclick="goStep(3)">← Back to results</button>
+        </div>
+
+    </div>
+</main>
+
+<div id="error-msg" class="error-toast hidden"></div>
+
+{% endblock %}
