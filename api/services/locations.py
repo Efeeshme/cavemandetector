@@ -1,7 +1,7 @@
 AREA_RADIUS = {
     "metro": 800,
     "cadde": 500,
-    "rayon": 3000,
+    "rayon": 2000,
 }
 
 LOCATIONS = {
