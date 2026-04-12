@@ -4,3 +4,4 @@ requests
 openai
 django-ratelimit
 django-cors-headers
+gunicorn
