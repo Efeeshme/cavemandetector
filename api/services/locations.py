@@ -6,8 +6,8 @@ AREA_RADIUS = {
 
 LOCATIONS = {
     "AZ": {
-        "name": "Azerbaycan",
-        "city": "Bakı",
+        "name": "Azerbaijan",
+        "city": "Baku",
         "areas": {
             "metro": [
                 {"name": "28 May", "latitude": 40.3794, "longitude": 49.8492},
@@ -48,8 +48,8 @@ LOCATIONS = {
         },
     },
     "TR_IST": {
-        "name": "Türkiye - İstanbul",
-        "city": "İstanbul",
+        "name": "Türkiye - Istanbul",
+        "city": "Istanbul",
         "areas": {
             "metro": [
                 {"name": "Taksim", "latitude": 41.0370, "longitude": 28.9850},
@@ -132,8 +132,8 @@ LOCATIONS = {
         },
     },
     "TR_IZM": {
-        "name": "Türkiye - İzmir",
-        "city": "İzmir",
+        "name": "Türkiye - Izmir",
+        "city": "Izmir",
         "areas": {
             "metro": [
                 {"name": "Konak", "latitude": 38.4190, "longitude": 27.1280},
@@ -175,8 +175,8 @@ LOCATIONS = {
     },
 
     "TR_MUG": {
-        "name": "Türkiye - Muğla",
-        "city": "Muğla",
+        "name": "Türkiye - Mugla",
+        "city": "Mugla",
         "areas": {
             "metro": [],
             "cadde": [
@@ -250,8 +250,8 @@ LOCATIONS = {
     },
 
     "GE": {
-        "name": "Gürcistan - Tiflis",
-        "city": "Tiflis",
+        "name": "Georgia - Tbilisi",
+        "city": "Tbilisi",
         "areas": {
             "metro": [
                 {"name": "Rustaveli", "latitude": 41.7010, "longitude": 44.8015},
@@ -292,8 +292,8 @@ LOCATIONS = {
         },
     },
     "RO": {
-        "name": "Romanya - Bükreş",
-        "city": "Bükreş",
+        "name": "Romania - Bucharest",
+        "city": "Bucharest",
         "areas": {
             "metro": [
                 {"name": "Piața Unirii", "latitude": 44.4268, "longitude": 26.1025},
@@ -334,8 +334,8 @@ LOCATIONS = {
         },
     },
     "BG": {
-        "name": "Bulgaristan - Sofya",
-        "city": "Sofya",
+        "name": "Bulgaria - Sofia",
+        "city": "Sofia",
         "areas": {
             "metro": [
                 {"name": "Serdika", "latitude": 42.6966, "longitude": 23.3219},
@@ -377,8 +377,8 @@ LOCATIONS = {
     },
 
     "PL": {
-        "name": "Polonya - Varşova",
-        "city": "Varşova",
+        "name": "Poland - Warsaw",
+        "city": "Warsaw",
         "areas": {
             "metro": [
                 {"name": "Centrum", "latitude": 52.2297, "longitude": 21.0100},
@@ -419,8 +419,8 @@ LOCATIONS = {
         },
     },
     "PT": {
-        "name": "Portekiz - Lizbon",
-        "city": "Lizbon",
+        "name": "Portugal - Lisbon",
+        "city": "Lisbon",
         "areas": {
             "metro": [
                 {"name": "Baixa-Chiado", "latitude": 38.7108, "longitude": -9.1397},
@@ -462,7 +462,7 @@ LOCATIONS = {
     },
 
     "DE": {
-        "name": "Almanya - Berlin",
+        "name": "Germany - Berlin",
         "city": "Berlin",
         "areas": {
             "metro": [
@@ -506,8 +506,8 @@ LOCATIONS = {
 
 
     "IT_ROM": {
-    "name": "İtalya - Roma",
-    "city": "Roma",
+    "name": "Italy - Rome",
+    "city": "Rome",
     "areas": {
         "metro": [
             {"name": "Termini", "latitude": 41.9010, "longitude": 12.5018},
@@ -549,7 +549,7 @@ LOCATIONS = {
 },
 
 "FR_PAR": {
-    "name": "Fransa - Paris",
+    "name": "France - Paris",
     "city": "Paris",
     "areas": {
         "metro": [
@@ -592,8 +592,8 @@ LOCATIONS = {
 },
 
 "UK_LON": {
-    "name": "Birleşik Krallık - Londra",
-    "city": "Londra",
+    "name": "United Kingdom - London",
+    "city": "London",
     "areas": {
         "metro": [
             {"name": "Oxford Circus", "latitude": 51.5152, "longitude": -0.1418},
@@ -635,7 +635,7 @@ LOCATIONS = {
 },
 
 "ES_MAD": {
-        "name": "İspanya - Madrid",
+        "name": "Spain - Madrid",
         "city": "Madrid",
         "areas": {
             "metro": [
@@ -678,7 +678,7 @@ LOCATIONS = {
     },
 
 "US_NYC": {
-        "name": "ABD - New York",
+        "name": "USA - New York",
         "city": "New York",
         "areas": {
             "metro": [

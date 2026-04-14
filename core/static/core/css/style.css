@@ -753,6 +753,13 @@ body {
     animation: spin 0.7s linear infinite;
 }
 
+.results-hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    font-family: var(--font-body);
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .hidden { display: none !important; }
