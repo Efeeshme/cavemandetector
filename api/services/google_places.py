@@ -154,6 +154,7 @@ def search_places_without_website(latitude, longitude, category, radius=2000, ma
             formatted["website"] = website
             with_website.append(formatted)
 
+    no_website.sort(key=lambda x: (not bool(x.get("phone"))))
     result = {
         "results": no_website,
         "competitors": with_website[:5],
