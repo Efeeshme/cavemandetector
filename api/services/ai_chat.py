@@ -109,13 +109,13 @@ def chat_with_ai(messages, business_info=None, competitors=None):
         return {"reply": response.choices[0].message.content}
     except openai.APITimeoutError:
         logger.error("OpenAI timeout")
-        return {"error": "AI yanıt vermedi, tekrar dene"}
+        return {"error": "AI failed to respond. Try again."}
     except openai.RateLimitError:
         logger.error("OpenAI rate limit")
-        return {"error": "API limit aşıldı, daha sonra tekrar dene"}
+        return {"error": "API rate limit exceeded. Try again later."}
     except openai.AuthenticationError:
         logger.error("OpenAI auth error")
-        return {"error": "AI servisi şu an kullanılamıyor"}
+        return {"error": "AI service is currently unavailable."}
     except openai.APIError as e:
         logger.error(f"OpenAI error: {str(e)}")
-        return {"error": "AI servisi şu an kullanılamıyor"}
+        return {"error": "AI service is currently unavailable."}

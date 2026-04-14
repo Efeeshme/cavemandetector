@@ -98,7 +98,7 @@ def _format_place(place):
 
 def search_places_without_website(latitude, longitude, category, radius=2000, max_results=20):
     if category not in PLACE_CATEGORIES:
-        return {"error": f"Geçersiz kategori: {category}"}
+        return {"error": f"Invalid category: {category}"}
 
     _clean_cache()
 
@@ -133,10 +133,10 @@ def search_places_without_website(latitude, longitude, category, radius=2000, ma
         data = response.json()
     except requests.exceptions.Timeout:
         logger.error(f"Google API timeout - lat:{latitude} lng:{longitude} cat:{category}")
-        return {"error": "Google API zaman aşımı"}
+        return {"error": "Google API timeout"}
     except requests.exceptions.RequestException as e:
         logger.error(f"Google API error - {str(e)}")
-        return {"error": "Arama servisi şu an kullanılamıyor"}
+        return {"error": "Search service is currently unavailable"}
 
     places = data.get("places", [])
 
@@ -155,6 +155,7 @@ def search_places_without_website(latitude, longitude, category, radius=2000, ma
             with_website.append(formatted)
 
     no_website.sort(key=lambda x: (not bool(x.get("phone"))))
+
     result = {
         "results": no_website,
         "competitors": with_website[:5],

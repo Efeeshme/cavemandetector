@@ -1,3 +1,31 @@
+// ── Rate Limiting (persists across page reloads) ──
+function getRateLimit(key) {
+    const data = JSON.parse(localStorage.getItem(key) || '{"count":0,"reset":0}');
+    if (Date.now() > data.reset) {
+        data.count = 0;
+        data.reset = Date.now() + 3600000;
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+    return data;
+}
+
+function incrementRate(key) {
+    const data = getRateLimit(key);
+    data.count++;
+    localStorage.setItem(key, JSON.stringify(data));
+    return data.count;
+}
+
+function checkRate(key, max) {
+    const data = getRateLimit(key);
+    if (data.count >= max) {
+        const mins = Math.ceil((data.reset - Date.now()) / 60000);
+        showError(`Hourly limit reached. Try again in ${mins} minutes.`);
+        return false;
+    }
+    return true;
+}
+
 // ── State ──
 const state = {
     category: null,
@@ -208,6 +236,7 @@ function renderAreas(type) {
 
 // ── Search ──
 async function searchByCoords() {
+    if (!checkRate('search_limit', 20)) return;
     showLoader();
     try {
         const res = await fetch('/api/search/', {
@@ -224,6 +253,7 @@ async function searchByCoords() {
         if (data.error) { showError(data.error); hideLoader(); return; }
         state.results = data.results;
         state.competitors = data.competitors || [];
+        incrementRate('search_limit');
         renderResults(data);
         goStep(3);
     } catch (e) { showError('Search failed'); }
@@ -231,6 +261,7 @@ async function searchByCoords() {
 }
 
 async function searchByArea() {
+    if (!checkRate('search_limit', 20)) return;
     showLoader();
     try {
         const res = await fetch('/api/search/area/', {
@@ -247,6 +278,7 @@ async function searchByArea() {
         if (data.error) { showError(data.error); hideLoader(); return; }
         state.results = data.results;
         state.competitors = data.competitors || [];
+        incrementRate('search_limit');
         renderResults(data);
         goStep(3);
     } catch (e) { showError('Search failed'); }
@@ -324,6 +356,8 @@ function sendMessage() {
 }
 
 async function sendToAI(text, isSystem) {
+    if (!checkRate('chat_limit', 10)) return;
+
     state.chatHistory.push({ role: 'user', content: text });
 
     const sendBtn = document.getElementById('send-btn');
@@ -347,6 +381,7 @@ async function sendToAI(text, isSystem) {
         } else {
             state.chatHistory.push({ role: 'assistant', content: data.reply });
             addBubble(data.reply, 'ai');
+            incrementRate('chat_limit');
         }
     } catch (e) { showError('AI failed to respond'); }
 
@@ -381,10 +416,11 @@ function addBubble(text, type) {
     container.scrollTop = container.scrollHeight;
 }
 
-// ── Init ──
+// ── Navigation ──
 function goHome() {
     document.getElementById('app-root').classList.add('hidden');
     document.getElementById('hero-section').classList.remove('hidden');
     runHero();
 }
+
 window.onload = runHero;

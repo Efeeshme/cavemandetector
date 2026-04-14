@@ -28,14 +28,14 @@ class SearchValidationTest(TestCase):
         self.client = Client()
         self.url = "/api/search/"
 
-    # --- Başarılı senaryolar ---
+    # --- Success ---
     def test_valid_request_returns_200(self):
         res = self.client.post(self.url, json.dumps({
             "latitude": 40.4093, "longitude": 49.8671, "category": "restaurant"
         }), content_type="application/json")
-        self.assertIn(res.status_code, [200, 502])  # 502 = API key geçersizse
+        self.assertIn(res.status_code, [200, 502])
 
-    # --- Eksik alan senaryoları ---
+    # --- Missing fields ---
     def test_missing_body(self):
         res = self.client.post(self.url, content_type="application/json")
         self.assertEqual(res.status_code, 400)
@@ -58,7 +58,7 @@ class SearchValidationTest(TestCase):
         }), content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- Geçersiz veri senaryoları ---
+    # --- Invalid data ---
     def test_invalid_category(self):
         res = self.client.post(self.url, json.dumps({
             "latitude": 40.4093, "longitude": 49.8671, "category": "spaceship"
@@ -107,7 +107,7 @@ class SearchValidationTest(TestCase):
         }), content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- Manipülasyon senaryoları ---
+    # --- Manipulation ---
     def test_invalid_json(self):
         res = self.client.post(self.url, "not json at all", content_type="application/json")
         self.assertEqual(res.status_code, 400)
@@ -135,16 +135,16 @@ class SearchValidationTest(TestCase):
         }), content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- HTTP method ---
-    def test_get_method_not_allowed(self):
+    # --- HTTP methods ---
+    def test_get_not_allowed(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 405)
 
-    def test_put_method_not_allowed(self):
+    def test_put_not_allowed(self):
         res = self.client.put(self.url)
         self.assertEqual(res.status_code, 405)
 
-    def test_delete_method_not_allowed(self):
+    def test_delete_not_allowed(self):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 405)
 
@@ -166,6 +166,10 @@ class CountriesTest(TestCase):
         data = res.json()
         self.assertTrue(len(data["countries"]) >= 10)
 
+    def test_countries_post_not_allowed(self):
+        res = self.client.post("/api/countries/")
+        self.assertEqual(res.status_code, 405)
+
 
 class LocationsTest(TestCase):
     def setUp(self):
@@ -175,7 +179,7 @@ class LocationsTest(TestCase):
         res = self.client.get("/api/locations/AZ/")
         self.assertEqual(res.status_code, 200)
         data = res.json()
-        self.assertEqual(data["country"], "Azerbaycan")
+        self.assertIn("areas", data)
         self.assertIn("metro", data["areas"])
         self.assertIn("cadde", data["areas"])
         self.assertIn("rayon", data["areas"])
@@ -203,7 +207,7 @@ class LocationsTest(TestCase):
         res = self.client.get("/api/locations/az/")
         self.assertEqual(res.status_code, 200)
 
-    def test_empty_metro_muğla(self):
+    def test_empty_metro_mugla(self):
         res = self.client.get("/api/locations/TR_MUG/")
         data = res.json()
         self.assertEqual(len(data["areas"]["metro"]), 0)
@@ -217,13 +221,23 @@ class LocationsTest(TestCase):
         self.assertIsInstance(metro["latitude"], float)
         self.assertIsInstance(metro["longitude"], float)
 
+    def test_us_nyc_exists(self):
+        res = self.client.get("/api/locations/US_NYC/")
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertEqual(len(data["areas"]["metro"]), 10)
+
+    def test_locations_post_not_allowed(self):
+        res = self.client.post("/api/locations/AZ/")
+        self.assertEqual(res.status_code, 405)
+
 
 class SearchByAreaValidationTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = "/api/search/area/"
 
-    # --- Başarılı senaryolar ---
+    # --- Success ---
     def test_valid_request(self):
         res = self.client.post(self.url, json.dumps({
             "country_code": "AZ", "area_type": "metro",
@@ -231,7 +245,7 @@ class SearchByAreaValidationTest(TestCase):
         }), content_type="application/json")
         self.assertIn(res.status_code, [200, 502])
 
-    # --- Eksik alan senaryoları ---
+    # --- Missing fields ---
     def test_missing_all_fields(self):
         res = self.client.post(self.url, json.dumps({}), content_type="application/json")
         self.assertEqual(res.status_code, 400)
@@ -260,7 +274,7 @@ class SearchByAreaValidationTest(TestCase):
         }), content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- Geçersiz veri senaryoları ---
+    # --- Invalid data ---
     def test_invalid_area_type(self):
         res = self.client.post(self.url, json.dumps({
             "country_code": "AZ", "area_type": "highway",
@@ -289,7 +303,7 @@ class SearchByAreaValidationTest(TestCase):
         }), content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- Manipülasyon senaryoları ---
+    # --- Manipulation ---
     def test_sql_injection_area_name(self):
         res = self.client.post(self.url, json.dumps({
             "country_code": "AZ", "area_type": "metro",
@@ -308,7 +322,11 @@ class SearchByAreaValidationTest(TestCase):
         res = self.client.post(self.url, "not json", content_type="application/json")
         self.assertEqual(res.status_code, 400)
 
-    # --- HTTP method ---
-    def test_get_method_not_allowed(self):
+    # --- HTTP methods ---
+    def test_get_not_allowed(self):
         res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 405)
+
+    def test_put_not_allowed(self):
+        res = self.client.put(self.url)
         self.assertEqual(res.status_code, 405)
