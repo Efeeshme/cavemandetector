@@ -91,8 +91,10 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        "https://cavemandetector.com",
-    ]
+    "https://cavemandetector-poi9r.ondigitalocean.app",
+    "https://cavemandetector.dev",
+    "https://www.cavemandetector.dev",
+]
     CORS_ALLOW_METHODS = ["GET", "POST"]
     CORS_ALLOW_HEADERS = ["content-type"]
 
