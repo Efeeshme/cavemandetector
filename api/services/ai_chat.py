@@ -75,7 +75,8 @@ RESTRICTIONS:
 - Do NOT use markdown formatting like **bold**, *italic*, or ### headers. Write plain text only.
 - ONLY answer questions about marketing, sales, pricing, business strategy.
 - If user asks about anything else, respond in {language}: "I can only help with marketing and sales topics."
-- No general chat. No off-topic answers."""
+- No general chat. No off-topic answers.
+- NEVER use em dash (—) character. Use a regular hyphen (-) or comma instead."""
 
 def chat_with_ai(messages, business_info=None, competitors=None):
     language = "English"

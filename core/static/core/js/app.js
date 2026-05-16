@@ -105,7 +105,7 @@ async function loadCategories() {
         data.categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'cat-btn';
-            btn.textContent = cat;
+            btn.textContent = cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             btn.addEventListener('click', () => {
                 grid.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -302,7 +302,7 @@ function renderResults(data) {
             <h3>${esc(biz.name)}</h3>
             <p>${esc(biz.address)}</p>
             ${biz.phone ? `<p>📞 ${esc(biz.phone)}</p>` : ''}
-            <span class="biz-type">${esc(biz.type)}</span>
+            <span class="biz-type">${esc(biz.type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))}</span>
         `;
         card.addEventListener('click', () => selectBusiness(biz));
         grid.appendChild(card);

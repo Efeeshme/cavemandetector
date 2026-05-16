@@ -19,7 +19,6 @@ PLACE_CATEGORIES = {
     "pharmacy": "pharmacy",
     "car_repair": "car_repair",
     "real_estate_agency": "real_estate_agency",
-    "store": "store",
     "pet_store": "pet_store",
 }
 
