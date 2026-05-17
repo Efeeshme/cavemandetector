@@ -4,9 +4,9 @@ from django.http import JsonResponse
 
 class RateLimitMiddleware:
     RATE_LIMITS = {
-        "/api/search/": {"max_requests": 30, "window": 3600},
-        "/api/search/area/": {"max_requests": 30, "window": 3600},
-        "/api/chat/": {"max_requests": 30, "window": 3600},
+        "/api/search/": {"max_requests": 40, "window": 3600},
+        "/api/search/area/": {"max_requests": 40, "window": 3600},
+        "/api/chat/": {"max_requests": 40, "window": 3600},
     }
 
     def __init__(self, get_response):

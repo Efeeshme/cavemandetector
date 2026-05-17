@@ -1,4 +1,4 @@
-// ── Rate Limiting (persists across page reloads) ──
+// ── Rate Limiting ──
 function getRateLimit(key) {
     const data = JSON.parse(localStorage.getItem(key) || '{"count":0,"reset":0}');
     if (Date.now() > data.reset) {
@@ -13,7 +13,6 @@ function incrementRate(key) {
     const data = getRateLimit(key);
     data.count++;
     localStorage.setItem(key, JSON.stringify(data));
-    return data.count;
 }
 
 function checkRate(key, max) {
@@ -39,11 +38,8 @@ const state = {
     areaType: null,
     areaName: null,
     locations: null,
-    userName: null,
-    userRole: null,
 };
 
-// Country flags mapping
 const FLAGS = {
     'AZ': '🇦🇿', 'TR_IST': '🇹🇷', 'TR_ANK': '🇹🇷', 'TR_IZM': '🇹🇷',
     'TR_MUG': '🇹🇷', 'TR_BRS': '🇹🇷', 'GE': '🇬🇪', 'RO': '🇷🇴',
@@ -59,6 +55,7 @@ const errorEl = document.getElementById('error-msg');
 function showLoader() { loader.classList.remove('hidden'); }
 function hideLoader() { loader.classList.add('hidden'); }
 function showError(msg) { errorEl.textContent = msg; errorEl.classList.remove('hidden'); setTimeout(() => errorEl.classList.add('hidden'), 4000); }
+function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
 function goStep(num) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -66,9 +63,7 @@ function goStep(num) {
     if (el) { el.classList.remove('hidden'); el.classList.add('active'); }
 }
 
-function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
-
-// ── Hero Animation ──
+// ── Hero ──
 function runHero() {
     const el = document.getElementById('hero-title');
     if (!el) return;
@@ -78,7 +73,6 @@ function runHero() {
             `<span class="char-anim" style="transition-delay:${i * 25}ms">${c === ' ' ? '&nbsp;' : c}</span>`
         ).join('')}</div>`
     ).join('');
-
     setTimeout(() => {
         document.querySelectorAll('.char-anim').forEach(s => s.classList.add('visible'));
         document.querySelectorAll('.fade-node').forEach(s => s.classList.add('visible'));
@@ -87,14 +81,19 @@ function runHero() {
     }, 150);
 }
 
-// ── Start App ──
 function startApp() {
     document.getElementById('hero-section').classList.add('hidden');
     document.getElementById('app-root').classList.remove('hidden');
     loadCategories();
 }
 
-// ── 1. Categories ──
+function goHome() {
+    document.getElementById('app-root').classList.add('hidden');
+    document.getElementById('hero-section').classList.remove('hidden');
+    runHero();
+}
+
+// ── Categories ──
 async function loadCategories() {
     showLoader();
     try {
@@ -118,13 +117,12 @@ async function loadCategories() {
     hideLoader();
 }
 
-// ── 2. Location ──
+// ── Location ──
 function useMyLocation() {
     if (!navigator.geolocation) { showError('Geolocation not supported'); return; }
     const btn = document.getElementById('btn-my-location');
     const label = btn.querySelector('.method-label');
     label.textContent = 'Locating...';
-
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             state.latitude = pos.coords.latitude;
@@ -141,7 +139,6 @@ function useMyLocation() {
 
 function browseAreas() { loadCountries(); }
 
-// ── 2b. Countries ──
 async function loadCountries() {
     showLoader();
     try {
@@ -151,7 +148,6 @@ async function loadCountries() {
         grid.innerHTML = '';
         document.getElementById('area-types-wrap').classList.add('hidden');
         document.getElementById('area-list-wrap').classList.add('hidden');
-
         data.countries.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.className = 'country-btn';
@@ -184,13 +180,11 @@ function renderAreaTypes() {
     const grid = document.getElementById('area-types');
     document.getElementById('area-list-wrap').classList.add('hidden');
     grid.innerHTML = '';
-
     const types = [
         { key: 'metro', label: 'Metro / Station' },
         { key: 'cadde', label: 'Street / Avenue' },
         { key: 'rayon', label: 'District / Borough' },
     ];
-
     types.forEach(t => {
         const btn = document.createElement('button');
         btn.className = 'area-type-btn';
@@ -211,13 +205,11 @@ function renderAreas(type) {
     const grid = document.getElementById('area-list');
     grid.innerHTML = '';
     const areas = state.locations[type];
-
     if (!areas || areas.length === 0) {
         grid.innerHTML = '<p style="color:var(--text-dim);font-size:13px;">No areas available for this type.</p>';
         wrap.classList.remove('hidden');
         return;
     }
-
     areas.forEach((area, i) => {
         const btn = document.createElement('button');
         btn.className = 'area-btn';
@@ -289,12 +281,10 @@ function renderResults(data) {
     document.getElementById('results-count').textContent = `${data.without_website} of ${data.total_found}`;
     const grid = document.getElementById('results-list');
     grid.innerHTML = '';
-
     if (data.results.length === 0) {
         grid.innerHTML = '<div class="no-results">No businesses without websites found in this category.</div>';
         return;
     }
-
     data.results.forEach(biz => {
         const card = document.createElement('div');
         card.className = 'biz-card';
@@ -309,24 +299,17 @@ function renderResults(data) {
     });
 }
 
-// ── 4. Chat ──
+// ── Chat ──
 function selectBusiness(biz) {
     state.selectedBusiness = biz;
     state.chatHistory = [];
-
     document.getElementById('selected-business').innerHTML = `
         <h3>${esc(biz.name)}</h3>
         <p>${esc(biz.address)} ${biz.phone ? '· ' + esc(biz.phone) : ''}</p>
     `;
-
     document.getElementById('chat-messages').innerHTML = '';
     goStep(4);
-
-    if (state.userName && state.userRole) {
-        sendToAI(`My name is ${state.userName}, I'm a ${state.userRole}. Write the sales message now.`, true);
-    } else {
-        sendToAI('Show business info and ask for my name and profession.', true);
-    }
+    sendToAI('Show business info and ask for my name, profession and preferred language for the sales message.', true);
 }
 
 document.getElementById('send-btn').addEventListener('click', sendMessage);
@@ -339,32 +322,17 @@ function sendMessage() {
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-
-    if (!state.userName) {
-        const parts = text.split(',').map(s => s.trim());
-        if (parts.length >= 2) {
-            state.userName = parts[0];
-            state.userRole = parts.slice(1).join(', ');
-        } else {
-            state.userName = text;
-            state.userRole = '';
-        }
-    }
-
     addBubble(text, 'user');
     sendToAI(text, false);
 }
 
 async function sendToAI(text, isSystem) {
     if (!checkRate('chat_limit', 10)) return;
-
     state.chatHistory.push({ role: 'user', content: text });
-
     const sendBtn = document.getElementById('send-btn');
     const input = document.getElementById('chat-input');
     sendBtn.disabled = true;
     input.disabled = true;
-
     try {
         const res = await fetch('/api/chat/', {
             method: 'POST',
@@ -384,7 +352,6 @@ async function sendToAI(text, isSystem) {
             incrementRate('chat_limit');
         }
     } catch (e) { showError('AI failed to respond'); }
-
     sendBtn.disabled = false;
     input.disabled = false;
     input.focus();
@@ -394,11 +361,9 @@ function addBubble(text, type) {
     const container = document.getElementById('chat-messages');
     const div = document.createElement('div');
     div.className = `msg msg-${type}`;
-
     const textEl = document.createElement('div');
     textEl.textContent = text;
     div.appendChild(textEl);
-
     if (type === 'ai') {
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
@@ -411,16 +376,8 @@ function addBubble(text, type) {
         });
         div.appendChild(copyBtn);
     }
-
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
-}
-
-// ── Navigation ──
-function goHome() {
-    document.getElementById('app-root').classList.add('hidden');
-    document.getElementById('hero-section').classList.remove('hidden');
-    runHero();
 }
 
 window.onload = runHero;
