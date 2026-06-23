@@ -46,6 +46,9 @@ const FLAGS = {
     'BG': '🇧🇬', 'PL': '🇵🇱', 'PT': '🇵🇹', 'DE': '🇩🇪',
     'IT_ROM': '🇮🇹', 'FR_PAR': '🇫🇷', 'UK_LON': '🇬🇧', 'ES_MAD': '🇪🇸',
     'US_NYC': '🇺🇸',
+    'MD_KIS': '🇲🇩', 'AL_TIR': '🇦🇱', 'MK_SKP': '🇲🇰', 'BA_SAR': '🇧🇦',
+    'IT_PAL': '🇮🇹', 'US_MCA': '🇺🇸', 'US_JAC': '🇺🇸', 'US_BAK': '🇺🇸',
+    'US_ELP': '🇺🇸', 'US_YOU': '🇺🇸',
 };
 
 // ── DOM ──
@@ -148,7 +151,17 @@ async function loadCountries() {
         grid.innerHTML = '';
         document.getElementById('area-types-wrap').classList.add('hidden');
         document.getElementById('area-list-wrap').classList.add('hidden');
-        data.countries.forEach((c, i) => {
+
+        const EMERGING = ['MD_KIS', 'AL_TIR', 'MK_SKP', 'BA_SAR', 'IT_PAL', 'US_MCA', 'US_JAC', 'US_BAK', 'US_ELP', 'US_YOU', 'AZ', 'TR_MUG', 'GE', 'RO', 'BG', 'PT'];
+        const established = data.countries.filter(c => !EMERGING.includes(c.code));
+        const emerging = data.countries.filter(c => EMERGING.includes(c.code));
+
+        const estLabel = document.createElement('div');
+        estLabel.className = 'market-label';
+        estLabel.textContent = 'Established Markets';
+        grid.appendChild(estLabel);
+
+        established.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.className = 'country-btn';
             btn.style.animationDelay = `${i * 40}ms`;
@@ -156,6 +169,25 @@ async function loadCountries() {
             btn.addEventListener('click', () => selectCountry(c.code, btn));
             grid.appendChild(btn);
         });
+
+        const divider = document.createElement('div');
+        divider.className = 'market-divider';
+        grid.appendChild(divider);
+
+        const emLabel = document.createElement('div');
+        emLabel.className = 'market-label emerging';
+        emLabel.innerHTML = 'Emerging Markets <span class="market-tip">💡 Higher potential — less competition online</span>';
+        grid.appendChild(emLabel);
+
+        emerging.forEach((c, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'country-btn emerging-btn';
+            btn.style.animationDelay = `${(established.length + i) * 40}ms`;
+            btn.innerHTML = `<span class="country-flag">${FLAGS[c.code] || '🌍'}</span>${c.name}`;
+            btn.addEventListener('click', () => selectCountry(c.code, btn));
+            grid.appendChild(btn);
+        });
+
         goStep('2b');
     } catch (e) { showError('Failed to load countries'); }
     hideLoader();
@@ -186,6 +218,7 @@ function renderAreaTypes() {
         { key: 'rayon', label: 'District / Borough' },
     ];
     types.forEach(t => {
+        if (!state.locations[t.key] || state.locations[t.key].length === 0) return;
         const btn = document.createElement('button');
         btn.className = 'area-type-btn';
         btn.textContent = t.label;

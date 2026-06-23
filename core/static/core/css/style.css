@@ -888,3 +888,45 @@ body {
     .step-title { font-size: 20px; }
     .method-card { padding: 20px 14px; }
 }
+/* Market Labels */
+.market-label {
+    grid-column: 1 / -1;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin: 8px 0 6px;
+    font-weight: 600;
+}
+
+.market-label.emerging {
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.market-tip {
+    font-size: 10px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.market-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+}
+
+.emerging-btn {
+    border-color: rgba(200,255,0,0.12) !important;
+}
+
+.emerging-btn:hover {
+    border-color: var(--accent) !important;
+}
